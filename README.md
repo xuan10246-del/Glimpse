@@ -56,11 +56,13 @@
 ## 快速安装与使用
 
 ### 方式一：源码 / 轻量发行包一键安装（推荐）
-1. 克隆本仓库或解压轻量包至任意本地目录。
+1. 克隆开源仓库 [`xuan10246-del/Glimpse`](https://github.com/xuan10246-del/Glimpse) 或下载轻量发行包并解压至任意本地目录。
 2. 双击运行 **`一键安装运行.bat`**，向导将自动配置独立便携 Python 3.12 环境、依赖包（支持国内镜像自动回退）并拉取所需模型与 `llama.cpp` 运行时，完成后自动生成桌面快捷方式并启动 Glimpse。
 
 ### 方式二：开发者手动运行
 ```powershell
+git clone https://github.com/xuan10246-del/Glimpse.git
+cd Glimpse
 pip install -r requirements.txt
 python setup_and_download.py
 python app/main.py
