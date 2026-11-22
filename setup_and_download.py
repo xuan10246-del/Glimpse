@@ -185,17 +185,28 @@ def ensure_llama_binaries(sess: requests.Session, has_gpu: bool) -> None:
 
 
 def ensure_ocr_models() -> None:
-    det = OCR_DIR / "ch_PP-OCRv5_det_mobile.onnx"
-    ch_rec = OCR_DIR / "ch_PP-OCRv5_rec_mobile.onnx"
-    ru_rec = OCR_DIR / "eslav_PP-OCRv5_rec_mobile.onnx"
-    if det.exists() and ch_rec.exists() and ru_rec.exists():
-        print("[跳过] PP-OCRv5 画面识别模型已就绪", flush=True)
+    required = (
+        "ch_PP-OCRv5_det_mobile.onnx",
+        "ch_PP-OCRv5_rec_mobile.onnx",
+        "en_PP-OCRv5_rec_mobile.onnx",
+        "eslav_PP-OCRv5_rec_mobile.onnx",
+        "korean_PP-OCRv5_rec_mobile.onnx",
+        "latin_PP-OCRv5_rec_mobile.onnx",
+    )
+    if all((OCR_DIR / fname).exists() for fname in required):
+        print("[跳过] PP-OCRv5 多语画面识别模型已全部就绪", flush=True)
         return
-    print("[下载] 预热 PP-OCRv5 多语识别模型...", flush=True)
+    print("[下载] 预热 PP-OCRv5 多语识别模型 (中/英/日/俄/韩/拉丁)...", flush=True)
     sys.path.insert(0, str(BASE_DIR))
     from app.ocr_engine import MultilingualOCRManager
 
-    MultilingualOCRManager().preload_defaults()
+    mgr = MultilingualOCRManager()
+    mgr.preload_defaults()
+    for lang_key in ("en", "korean", "latin"):
+        try:
+            mgr._get_rec_engine(lang_key)
+        except Exception as exc:
+            print(f"[提示] 预热 {lang_key} 识别模型时跳过: {exc}", flush=True)
 
 
 def main() -> int:

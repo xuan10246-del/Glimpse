@@ -7,6 +7,7 @@ echo      Glimpse 瞬译 - 一键初始化与运行向导
 echo ========================================================
 echo.
 
+set "LT_BASE=%~dp0"
 if not exist "%~dp0tools" mkdir "%~dp0tools"
 set "UV_EXE=%~dp0tools\uv.exe"
 set "UV_PYTHON_INSTALL_DIR=%~dp0tools\python"
@@ -18,6 +19,7 @@ if not exist "%UV_EXE%" (
     echo [1/5] 正在获取轻量包管理器 uv.exe ...
     powershell -NoProfile -ExecutionPolicy Bypass -Command ^
       "$ErrorActionPreference='Stop'; " ^
+      "$base=$env:LT_BASE.TrimEnd('\'); " ^
       "$tmp=Join-Path $env:TEMP 'uv_win.zip'; " ^
       "$u1='https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-pc-windows-msvc.zip'; " ^
       "$u2='https://ghfast.top/'+$u1; " ^
@@ -25,7 +27,7 @@ if not exist "%UV_EXE%" (
       "$ext=Join-Path $env:TEMP 'uv_ext'; Remove-Item $ext -Recurse -Force -ErrorAction SilentlyContinue; " ^
       "Expand-Archive -Path $tmp -DestinationPath $ext -Force; " ^
       "$found=Get-ChildItem $ext -Filter 'uv.exe' -Recurse | Select-Object -First 1; " ^
-      "Copy-Item $found.FullName -Destination (Join-Path '%~dp0' 'tools\uv.exe') -Force; " ^
+      "Copy-Item $found.FullName -Destination (Join-Path $base 'tools\uv.exe') -Force; " ^
       "Remove-Item $tmp,$ext -Recurse -Force -ErrorAction SilentlyContinue"
     if errorlevel 1 (
         echo [错误] uv.exe 下载失败，请检查网络或代理设置后重试。
