@@ -1,0 +1,14 @@
+pyside6-essentials>=6.8.0
+rapidocr>=3.10.0
+onnxruntime>=1.19.0
+faster-whisper>=1.1.0
+ctranslate2>=4.5.0
+pyaudiowpatch>=0.2.12
+proc-tap>=1.1.0
+mss>=10.0.0
+pillow>=11.0.0
+numpy>=2.0.0
+psutil>=6.0.0
+requests>=2.32.0
+huggingface-hub>=0.26.0
+sherpa-onnx>=1.10.0

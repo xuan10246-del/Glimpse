@@ -1,0 +1,18 @@
+# Runtime & portable toolchain (downloaded by setup scripts)
+.venv/
+bin/
+models/
+tools/
+
+# Local runtime state & logs
+config.json
+*.log
+*.lnk
+*.part
+
+# Packaging & caches
+__pycache__/
+*.py[cod]
+*.zip
+.DS_Store
+Thumbs.db
