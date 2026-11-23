@@ -1,7 +1,7 @@
 <div align="center">
   <img src="assets/AppIcon.png" alt="Glimpse Logo" width="112" height="112" />
   <h1>Glimpse · 瞬译</h1>
-  <p><b>一瞥即译，无痕伴随</b> — 面向 Windows 的离线优先实时屏幕多区叠译、进程音频隔离同传与双向快捷输出工作台（v3.0）</p>
+  <p><b>一瞥即译，无痕伴随</b> — 面向 Windows 的离线优先实时屏幕多区叠译、进程音频隔离同传与双向快捷输出工作台（v3.1）</p>
   <p>
     <img src="https://img.shields.io/badge/Platform-Windows%2010%2F11-3B82F6?style=flat-square" alt="Windows" />
     <img src="https://img.shields.io/badge/Python-3.12-34C77B?style=flat-square" alt="Python 3.12" />
@@ -12,7 +12,7 @@
 
 ---
 
-## 核心特性（v3.0）
+## 核心特性（v3.1）
 
 * **防自捕透明叠层（`WDA_EXCLUDEFROMCAPTURE`）**
   基于 Windows DWM 原生截屏隔离（`0x11`），OCR 取景框与录屏软件会自动“无视”译文窗口本身。你可以放心地将翻译窗直接覆盖在外语字幕或原文上方，彻底消除自翻译死循环。
@@ -55,10 +55,10 @@
 
 ## 快速安装与使用
 
-### 方式一：下载 Release 轻量安装包一键运行（推荐）
-1. 前往 [**Releases 页面**](https://github.com/xuan10246-del/Glimpse/releases) 下载最新版 **`Glimpse_v3.0_轻量在线安装版.zip`**（内置 `uv.exe` 与 `PP-OCRv5` 多语画面识别模型；**请勿直接下载 GitHub 的 `Source code (zip)`**，因为 GitHub 自动打包的源码压缩包会将 `.bat` 转为 Unix `LF` 换行符导致 Windows 批处理报错）。
-2. 将压缩包**完整解压**至任意本地目录（切勿在压缩软件预览窗口内直接双击）。
-3. 双击运行 **`一键安装运行.bat`**，向导将自动配置独立便携 Python 3.12 环境、依赖包（支持国内镜像自动回退）并拉取所需模型与 `llama.cpp` 运行时，完成后自动生成桌面快捷方式并启动 Glimpse。
+### 方式一：下载标准安装程序一键安装（推荐 · 可选安装盘符）
+1. 前往 [**Releases 页面**](https://github.com/xuan10246-del/Glimpse/releases) 下载最新版 **`Glimpse_v3.1.0_Setup_Win64.exe`**（标准 Windows 安装向导，也可下载同页面的 `Glimpse_v3.1.0_Portable_Win64.zip` 免安装便携版；**请勿直接下载 GitHub 的 `Source code (zip)`**）。
+2. 双击运行 **`Glimpse_v3.1.0_Setup_Win64.exe`**（因无商业签名，若弹出 Windows SmartScreen 提示请点「**更多信息 → 仍要运行**」），在向导中自由选择安装目录（检测到 D 盘默认 `D:\Glimpse`，也可点「浏览」选任意磁盘；所有 AI 模型与下载缓存均严格存放在所选目录内，**0 字节占用 C 盘**）。
+3. 安装向导收尾时会自动初始化独立便携 Python 3.12 环境与本地模型，并在桌面与开始菜单生成 **`Glimpse 瞬译`**（直接运行原生 `Glimpse.exe`，无黑框；支持在 Windows「应用和功能」中一键完整卸载）。
 
 ### 方式二：开发者手动运行
 ```powershell
@@ -91,11 +91,17 @@ Glimpse/
 ├── PRODUCT.md                 # 产品定位与核心架构说明
 ├── LICENSE                    # MIT 开源许可证
 ├── requirements.txt           # Python 依赖清单
-├── setup_and_download.py      # 命令行模型与推理引擎预热脚本
+├── installer/                 # Inno Setup 安装包配置与原生 .exe 启动器源码
+│   ├── build_installer.ps1    # 一键编译 Glimpse.exe / Setup 安装包构建脚本
+│   ├── glimpse_setup.iss      # Inno Setup 6 安装向导与干净卸载配置
+│   └── launcher/              # C# 原生无黑框 Glimpse.exe / Glimpse_Debug.exe 源码
+├── setup_and_download.py      # 命令行模型与推理引擎预热脚本（临时缓存全内置于 tools/tmp）
+├── Glimpse.exe                # Release 随附的原生桌面启动程序（无黑框，带应用图标）
+├── Glimpse_Debug.exe          # Release 随附的带调试终端启动程序
 ├── 一键安装运行.bat            # 零前置环境一键初始化脚本
-├── 启动翻译器.bat              # 无控制台窗口启动入口
-├── 启动翻译器(调试日志).bat     # 带终端日志输出启动入口
-└── 创建桌面快捷方式.bat        # 生成“Glimpse 瞬译”桌面快捷方式
+├── 启动翻译器.bat              # 无控制台窗口备用启动脚本
+├── 启动翻译器(调试日志).bat     # 带终端日志输出备用启动脚本
+└── 创建桌面快捷方式.bat        # 生成“Glimpse 瞬译”桌面快捷方式（优先指向 Glimpse.exe）
 ```
 
 ---

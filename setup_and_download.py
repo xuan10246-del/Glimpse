@@ -15,6 +15,9 @@ import requests
 BASE_DIR = Path(__file__).resolve().parent
 MODELS_DIR = BASE_DIR / "models"
 BIN_LLAMA_DIR = BASE_DIR / "bin" / "llama"
+TOOLS_DIR = BASE_DIR / "tools"
+TMP_DIR = TOOLS_DIR / "tmp"
+HF_CACHE_DIR = TOOLS_DIR / "hf_cache"
 OCR_DIR = MODELS_DIR / "ocr"
 WHISPER_DIR = MODELS_DIR / "faster-whisper-large-v3-turbo-ct2"
 LLM_FILE = MODELS_DIR / "HY-MT1.5-1.8B-Q8_0.gguf"
@@ -175,7 +178,8 @@ def ensure_llama_binaries(sess: requests.Session, has_gpu: bool) -> None:
     if not chosen_assets:
         raise RuntimeError("未找到适配当前系统架构的 llama.cpp 发行包")
 
-    with tempfile.TemporaryDirectory() as tmp:
+    TMP_DIR.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(dir=str(TMP_DIR)) as tmp:
         tmp_dir = Path(tmp)
         for name, url in chosen_assets:
             zpath = tmp_dir / name
@@ -210,13 +214,19 @@ def ensure_ocr_models() -> None:
 
 
 def main() -> int:
+    TMP_DIR.mkdir(parents=True, exist_ok=True)
+    HF_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    os.environ["HF_HOME"] = str(HF_CACHE_DIR)
+    os.environ["TMP"] = str(TMP_DIR)
+    os.environ["TEMP"] = str(TMP_DIR)
+
     has_gpu = detect_nvidia_gpu()
     print(
         f"[硬件] 检测到 NVIDIA 显卡: {'是 (启用 CUDA 加速)' if has_gpu else '否 (将配置 CPU 兼容模式)'}",
         flush=True,
     )
     sess = requests.Session()
-    sess.headers.update({"User-Agent": "Glimpse-Setup/3.0"})
+    sess.headers.update({"User-Agent": "Glimpse-Setup/3.1"})
     hf_endpoint = pick_hf_endpoint(sess)
     ensure_ocr_models()
     ensure_llama_binaries(sess, has_gpu)

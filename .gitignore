@@ -1,3 +1,9 @@
+# Build & compiled Windows launchers (shipped via GitHub Releases)
+Glimpse.exe
+Glimpse_Debug.exe
+installer/output/
+installer/ChineseSimplified.isl
+
 # Runtime & portable toolchain (downloaded by setup scripts)
 .venv/
 bin/
@@ -14,5 +20,6 @@ config.json
 __pycache__/
 *.py[cod]
 *.zip
+*.exe
 .DS_Store
 Thumbs.db

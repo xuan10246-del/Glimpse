@@ -1,6 +1,6 @@
 # Design Authority: Quiet Studio Slate
 
-本文件为 **Glimpse（瞬译）v3.0** 客户端 UI 的视觉与交互设计规范。
+本文件为 **Glimpse（瞬译）v3.1** 客户端 UI 的视觉与交互设计规范。
 
 ## 审美方向
 - **主题气质**：安静、沉稳、克制的桌面工具质感（Quiet Studio Slate — 对齐现代 Windows 11 / VS Code / OBS 深色桌面效率工具，彻底移除 `MONO` 英文术语与刺眼高饱和霓虹配色）。

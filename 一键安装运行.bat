@@ -3,12 +3,17 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 echo ========================================================
-echo      Glimpse 瞬译 - 一键初始化与运行向导
+echo      Glimpse 瞬译 v3.1 - 一键初始化与运行向导
 echo ========================================================
 echo.
 
 set "LT_BASE=%~dp0"
 if not exist "%~dp0tools" mkdir "%~dp0tools"
+if not exist "%~dp0tools\tmp" mkdir "%~dp0tools\tmp"
+if not exist "%~dp0tools\hf_cache" mkdir "%~dp0tools\hf_cache"
+
+set "TMP=%~dp0tools\tmp"
+set "TEMP=%~dp0tools\tmp"
 set "UV_EXE=%~dp0tools\uv.exe"
 set "UV_PYTHON_INSTALL_DIR=%~dp0tools\python"
 set "UV_CACHE_DIR=%~dp0tools\uv-cache"
@@ -20,11 +25,12 @@ if not exist "%UV_EXE%" (
     powershell -NoProfile -ExecutionPolicy Bypass -Command ^
       "$ErrorActionPreference='Stop'; " ^
       "$base=$env:LT_BASE.TrimEnd('\'); " ^
-      "$tmp=Join-Path $env:TEMP 'uv_win.zip'; " ^
+      "$tmpDir=Join-Path $base 'tools\tmp'; " ^
+      "$tmp=Join-Path $tmpDir 'uv_win.zip'; " ^
       "$u1='https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-pc-windows-msvc.zip'; " ^
       "$u2='https://ghfast.top/'+$u1; " ^
       "try { Invoke-WebRequest -Uri $u1 -OutFile $tmp -TimeoutSec 30 } catch { Invoke-WebRequest -Uri $u2 -OutFile $tmp -TimeoutSec 60 }; " ^
-      "$ext=Join-Path $env:TEMP 'uv_ext'; Remove-Item $ext -Recurse -Force -ErrorAction SilentlyContinue; " ^
+      "$ext=Join-Path $tmpDir 'uv_ext'; Remove-Item $ext -Recurse -Force -ErrorAction SilentlyContinue; " ^
       "Expand-Archive -Path $tmp -DestinationPath $ext -Force; " ^
       "$found=Get-ChildItem $ext -Filter 'uv.exe' -Recurse | Select-Object -First 1; " ^
       "Copy-Item $found.FullName -Destination (Join-Path $base 'tools\uv.exe') -Force; " ^
@@ -36,7 +42,7 @@ if not exist "%UV_EXE%" (
     )
 )
 
-echo [2/5] 配置独立 Python 3.12 运行环境...
+echo [2/5] 配置独立 Python 3.12 运行环境（全目录隔离，不写入 C 盘）...
 "%UV_EXE%" python install 3.12
 if errorlevel 1 (
     echo [错误] Python 3.12 下载失败，请检查网络连接。
@@ -74,7 +80,7 @@ if not errorlevel 1 (
     )
 )
 
-echo [4/5] 检查并拉取本地 AI 模型与推理引擎（首次约需 3.4GB，已有文件会自动跳过）...
+echo [4/5] 检查并拉取本地 AI 模型与推理引擎（全部存放在当前安装目录，已有文件会自动跳过）...
 "%~dp0.venv\Scripts\python.exe" -u "%~dp0setup_and_download.py"
 if errorlevel 1 (
     echo [错误] 模型准备失败，请查看上方日志并检查网络后重试。
@@ -82,7 +88,16 @@ if errorlevel 1 (
     exit /b 1
 )
 
+if /i "%~1"=="--from-installer" goto :launch_app
 echo [5/5] 创建桌面快捷方式并启动程序...
 call "%~dp0创建桌面快捷方式.bat" --silent
+
+:launch_app
+echo [启动] 正在启动 Glimpse 瞬译...
+if exist "%~dp0Glimpse.exe" goto :run_exe
 call "%~dp0启动翻译器.bat"
+exit /b 0
+
+:run_exe
+start "" "%~dp0Glimpse.exe"
 exit /b 0
