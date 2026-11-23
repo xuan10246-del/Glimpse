@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Glimpse (瞬译) v3.0 Main Application Window (Quiet Studio Slate 6-Tab Studio UI)."""
+"""Glimpse (瞬译) v3.1 Main Application Window (Quiet Studio Slate 6-Tab Studio UI)."""
 
 from __future__ import annotations
 
@@ -400,7 +400,7 @@ def _make_slider_row(
 
 
 class ControlPanelWindow(QWidget):
-    """True Desktop Main Application Window for Glimpse (瞬译) v3.0."""
+    """True Desktop Main Application Window for Glimpse (瞬译) v3.1."""
 
     # Main Window / Lifecycle
     start_translation_requested = Signal()
@@ -544,7 +544,7 @@ class ControlPanelWindow(QWidget):
         title_col.setSpacing(1)
         lbl_brand = QLabel("Glimpse 瞬译", self._rail)
         lbl_brand.setStyleSheet(f"color: {TEXT_PRIMARY}; font-size: 14px; font-weight: bold; background: transparent;")
-        lbl_ver = QLabel("桌面工作台 v3.0", self._rail)
+        lbl_ver = QLabel("桌面工作台 v3.1", self._rail)
         lbl_ver.setStyleSheet(f"color: {TEXT_MUTED}; font-size: 11px; background: transparent;")
         title_col.addWidget(lbl_brand)
         title_col.addWidget(lbl_ver)
