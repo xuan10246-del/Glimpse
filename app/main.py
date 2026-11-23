@@ -16,6 +16,18 @@ _ROOT = str(Path(__file__).resolve().parent.parent)
 if _ROOT not in sys.path:
     sys.path.insert(0, _ROOT)
 
+_LOCAL_TOOLS_DIR = Path(_ROOT) / "tools"
+_LOCAL_TMP_DIR = _LOCAL_TOOLS_DIR / "tmp"
+_LOCAL_HF_DIR = _LOCAL_TOOLS_DIR / "hf_cache"
+try:
+    _LOCAL_TMP_DIR.mkdir(parents=True, exist_ok=True)
+    _LOCAL_HF_DIR.mkdir(parents=True, exist_ok=True)
+except Exception:
+    pass
+os.environ.setdefault("HF_HOME", str(_LOCAL_HF_DIR))
+os.environ.setdefault("TMP", str(_LOCAL_TMP_DIR))
+os.environ.setdefault("TEMP", str(_LOCAL_TMP_DIR))
+
 from app.dll_setup import has_nvidia_cuda_gpu, setup_cuda_dlls  # noqa: E402
 
 setup_cuda_dlls()

@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 BASE_DIR: Path = Path(__file__).resolve().parent.parent
+APP_VERSION: str = "3.1.0"
 LLAMA_DIR: Path = BASE_DIR / "bin" / "llama"
 LLAMA_SERVER_EXE: Path = LLAMA_DIR / "llama-server.exe"
 LLAMA_VULKAN_DIR: Path = BASE_DIR / "bin" / "llama-vulkan"

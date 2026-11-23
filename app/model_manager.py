@@ -425,7 +425,7 @@ def _stream_download(
 
     sess = requests.Session()
     sess.trust_env = True  # Respect user Windows proxy for external HuggingFace / GitHub downloads
-    headers = {"User-Agent": "Glimpse/3.0"}
+    headers = {"User-Agent": "Glimpse/3.1"}
 
     for idx, url in enumerate(urls):
         if cancel_event is not None and cancel_event.is_set():
@@ -517,7 +517,7 @@ def download_vulkan_runtime(
     resp = sess.get(
         "https://api.github.com/repos/ggml-org/llama.cpp/releases?per_page=10",
         timeout=20,
-        headers={"Accept": "application/vnd.github+json", "User-Agent": "Glimpse/3.0"},
+        headers={"Accept": "application/vnd.github+json", "User-Agent": "Glimpse/3.1"},
     )
     resp.raise_for_status()
     releases = resp.json()
